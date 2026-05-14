@@ -1,5 +1,12 @@
 <div align="center">
 
+# 📡 Universal RC Controller — URC
+
+**A fully custom wireless RC system built from scratch.**  
+Hand-wired hardware · ESP-NOW radio link · Modular receiver library · Multi-project compatible
+
+**by [Aniket Chowdhury](https://github.com/itzzhashtag) (aka `#Hashtag`)**
+
 <img src="https://img.shields.io/badge/ESP32-ESP--NOW-red?style=for-the-badge&logo=espressif&logoColor=white"/>
 <img src="https://img.shields.io/badge/Status-Active%20Development-brightgreen?style=for-the-badge"/>
 <img src="https://img.shields.io/badge/Protocol-ESP--NOW-blue?style=for-the-badge"/>
@@ -7,18 +14,6 @@
 <img src="https://img.shields.io/badge/Current-v2.0-blueviolet?style=for-the-badge"/>
 
 <br/><br/>
-
-<!-- 🖼️ HERO IMAGE — replace src with your controller photo or a banner image -->
-<img src="./assets/hero_banner.png" alt="URC Hero Banner" width="100%"/>
-
-<br/><br/>
-
-# 📡 Universal RC Controller — URC
-
-**A fully custom wireless RC system built from scratch.**  
-Hand-wired hardware · ESP-NOW radio link · Modular receiver library · Multi-project compatible
-
-**by [Aniket Chowdhury](https://github.com/itzzhashtag) (aka `#Hashtag`)**
 
 </div>
 
