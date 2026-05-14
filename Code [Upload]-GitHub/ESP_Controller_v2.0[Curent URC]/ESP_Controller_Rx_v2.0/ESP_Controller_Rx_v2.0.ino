@@ -1,4 +1,55 @@
-//URC MAC : D4:E9:F4:A4:C9:7C
+// ============================================================================
+//  Universal RC (URC) Receiver Example
+//  Project : ESP32 Universal RC System
+//  Role    : Receiver / Robot Side
+//  Author  : Aniket Chowdhury
+//  Protocol: ESP-NOW Wireless Communication
+//  TX MAC  : D4:E9:F4:A4:C9:7C
+// ----------------------------------------------------------------------------
+//  DESCRIPTION
+// ----------------------------------------------------------------------------
+//  This project receives wireless control data from the URC transmitter
+//  using ESP-NOW protocol on ESP32.
+//
+//  The receiver provides:
+//
+//   • Dual joystick values      (Lx, Ly, Rx, Ry)
+//   • Push button states        (LA, RA, LB, RB)
+//   • Toggle switch states      (SW1, SW2)
+//   • Potentiometer values      (Pot1, Pot2)
+//   • TX battery percentage
+//   • Connection status monitoring
+// ----------------------------------------------------------------------------
+//  WORKING PRINCIPLE
+// ----------------------------------------------------------------------------
+//  1. Transmitter sends control packets wirelessly via ESP-NOW.
+//  2. ReceiverModule decodes incoming packets.
+//  3. receiver.update() maintains communication state.
+//  4. receivedata() copies latest values into local variables.
+//  5. User can directly use values for motors, servos, relays, etc.
+//
+// ----------------------------------------------------------------------------
+//  CONNECTION SAFETY
+// ----------------------------------------------------------------------------
+//  If transmitter disconnects or packets stop arriving:
+//
+//   • receiver.connected() becomes FALSE
+//   • Data is automatically zeroed by ReceiverModule
+//   • User can implement failsafe logic:
+//        - Stop motors
+//        - Disable servos
+//        - Enter safe mode
+//
+// ----------------------------------------------------------------------------
+//  NOTES
+// ----------------------------------------------------------------------------
+//  • Avoid long delay() calls for smooth wireless response.
+//  • Call receiver.update() every loop cycle.
+//  • Use receivedata() for all input processing.
+//  • ESP-NOW works without WiFi router.
+//
+// ============================================================================
+
 #include "ReceiverModule.h"
 
 int leftX, leftY, rightX, rightY, pot1, pot2;  // Joystick axes  -99 .. 99  //Potentiometers  0 .. 100
