@@ -180,10 +180,28 @@ URC/
 
 ---
 
+## 👤 Author & Contact
+
+👨 **Name:** Aniket Chowdhury (aka Hashtag)  
+📧 **Email:** [micro.aniket@gmail.com](mailto:micro.aniket@gmail.com)  
+💼 **LinkedIn:** [itzz-hashtag](https://www.linkedin.com/in/itzz-hashtag/)  
+🐙 **GitHub:** [itzzhashtag](https://github.com/itzzhashtag)  
+📸 **Instagram:** [@itzz_hashtag](https://instagram.com/itzz_hashtag)
+
+---
+
+# ⭐ SUPPORT
+
+If you like this project:
+⭐ Star the repo  
+🍴 Fork it  
+🔧 Modify it  
+🚀 Build your own version  
+
+---
+
 <div align="center">
-
-**[📖 v2.0 Full Docs](./v2.0/README.md)** · **[📧 Email](mailto:micro.aniket@gmail.com)** · **[💼 LinkedIn](https://linkedin.com/in/itzz-hashtag)** · **[🐙 GitHub](https://github.com/itzzhashtag)** · **[📸 Instagram](https://instagram.com/itzz_hashtag)**
-
+  
 <br/>
 
 ⭐ Star this repo if URC saved you from building your own from scratch!
