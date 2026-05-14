@@ -6,277 +6,314 @@
 <img src="https://img.shields.io/badge/Audio-Radiomaster%20Style-orange?style=for-the-badge"/>
 <img src="https://img.shields.io/badge/Status-Stable-brightgreen?style=for-the-badge"/>
 
+<br/><br/>
+
+<!-- 🖼️ HERO — replace with a photo of the v2.0 controller or a wiring hero shot -->
+<img src="./assets/hero_v2.png" alt="URC v2.0 Hero" width="100%"/>
+
+<br/>
+
 # 📡 URC v2.0 — Universal RC Controller
 
-> **What's new:** Display offloaded to Arduino Nano · 4-screen KS0108 UI · 18-byte UART protocol · Radiomaster-style sound engine
+> **What's new:** Display offloaded to Arduino Nano · 4-screen KS0108 UI · 18-byte UART protocol · Radiomaster-style sweep audio
 
-**by [Aniket Chowdhury](https://github.com/itzzhashtag) (aka `#Hashtag`)**
-
+**by [Aniket Chowdhury](https://github.com/itzzhashtag) (aka `#Hashtag`)**  
 [← Back to main README](../README.md)
 
 </div>
 
 ---
 
-## 🔑 What Changed in v2.0
+## 🔑 v2.0 vs v1.9 — What Changed
 
-| Feature | Before (v1.9) | v2.0 |
-|---------|--------------|------|
-| Display driver | U8g2 on ESP32 | Offloaded to Arduino Nano |
-| UART protocol | None | Structured 18-byte packet |
-| Screen count | 1 (normal) | 4 screens (boot/caution/lowbat/normal) |
-| Audio | Single beep | Full sweep-based sound engine |
-| Serial debug | Verbose spam | Clean tagged lines only |
-| Boot settle | Blocking delay | Animated SCREEN_BOOT streaming |
-
----
-
-## 🏗️ System Overview
-
-```
- ┌──────────────────────────────────────────────────────────────────┐
- │                   ESP32 Transmitter (TX)                         │
- │                                                                  │
- │  [LJoy]  [RJoy]  [LBt][RBt]  [TSW1][TSW2]  [Pot1][Pot2]       │
- │     ↓       ↓        ↓             ↓              ↓             │
- │           ControllerData struct (25 bytes)                       │
- │                        ↓                                         │
- │              esp_now_send() → peerMAC                           │
- │                                        ← AckData (alive=true)   │
- │                                                                  │
- │  Serial2 (GPIO17 TX → Nano RX0)                                  │
- │  18-byte UART packet every frame  ──────────────────────────────►│
- └──────────────────────────────────────────────────────────────────┘
-                                     ▼
- ┌──────────────────────────────────────────────────────────────────┐
- │                   Arduino Nano (Display)                         │
- │                                                                  │
- │  Parses 18-byte packet → unpacks to dScreen, dLx, dLy…          │
- │  Renders correct screen on JHD12864E (KS0108 128×64)            │
- │    SCREEN_BOOT    → Bouncing box + "Booting…"                   │
- │    SCREEN_CAUTION → Live SW/POT/BAT gate status                 │
- │    SCREEN_LOWBAT  → Large blinking bat icon                     │
- │    SCREEN_NORMAL  → Full controller HUD                         │
- └──────────────────────────────────────────────────────────────────┘
-```
+| Feature | v1.9 | v2.0 |
+|---------|------|------|
+| Display driver | U8g2 running on ESP32 | Offloaded to Arduino Nano |
+| UART protocol | None | Structured 18-byte packet + XOR checksum |
+| Screen count | 1 (normal only) | 4 screens (boot / caution / lowbat / normal) |
+| Audio | Single `tone()` beep | Full sweep-based sound profiles |
+| Boot settle | Blocking `delay()` | Animated `SCREEN_BOOT` stream to Nano |
+| Serial debug | Verbose spam | Clean `[TAG]` prefixed lines only |
 
 ---
 
-## 📦 Files in This Version
+## 📸 Build Photos
+
+<div align="center">
+
+<!-- 🖼️ Replace src with your actual build photos -->
+
+| Controller (Front) | Controller (Back) | Internals |
+|:-----------------:|:-----------------:|:---------:|
+| <img src="./assets/v2_front.jpg" width="220" alt="Front"/> | <img src="./assets/v2_back.jpg" width="220" alt="Back"/> | <img src="./assets/v2_inside.jpg" width="220" alt="Inside"/> |
+
+</div>
+
+---
+
+## 🏗️ System Architecture
+
+```
+ ┌─────────────────────────────────────────────────────────┐
+ │                ESP32 Transmitter (TX)                   │
+ │                                                         │
+ │  LJoy(35,32)  RJoy(33,34)  Btns(26,27,25,13)           │
+ │  Toggle(18,19)  Pot(39,36)  ADS1115-I2C  Buzzer(23)    │
+ │                        ↓                                │
+ │          ControllerData struct → esp_now_send()         │
+ │                                        ↑ AckData        │
+ │  Serial2 GPIO17→ ─────────────────────────────────────► │
+ │  18-byte UART packet @ LCD_FPS Hz                       │
+ └─────────────────────────────────────────────────────────┘
+                          │ UART 115200 baud
+                          ▼
+ ┌─────────────────────────────────────────────────────────┐
+ │              Arduino Nano — Display Slave               │
+ │  Parses packet → XOR check → unpacks → renders          │
+ │  JHD12864E · KS0108 · 128×64 px · U8g2 full-buffer     │
+ └─────────────────────────────────────────────────────────┘
+                                       │ ESP-NOW (broadcast/unicast)
+                                       ▼
+ ┌─────────────────────────────────────────────────────────┐
+ │              ESP32 Receiver (any robot/vehicle)         │
+ │  #include "ReceiverModule.h"                            │
+ │  receiver.begin() · receiver.update() · receiver.data   │
+ └─────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 📦 Files
 
 | File | Role |
 |------|------|
-| `ESP32_TX_v2.0.ino` | Transmitter — reads inputs, sends ESP-NOW, drives UART |
-| `Nano_Display_v2.0.ino` | Nano slave — receives UART packets, renders KS0108 |
-| `ReceiverModule.h` | Drop-in receiver library for robot/vehicle side |
-| `URC_Example_RX.ino` | Example receiver sketch using ReceiverModule.h |
+| `ESP32_TX_v2.0.ino` | Transmitter — inputs, ESP-NOW send, UART to Nano |
+| `Nano_Display_v2.0.ino` | Nano slave — UART parser, KS0108 renderer |
+| `ReceiverModule.h` | Drop-in receiver library (copy into any robot sketch) |
+| `URC_Example_RX.ino` | Minimal example using ReceiverModule |
+| `LCD_Visualizer.html` | Browser-based live LCD preview (interactive) |
 
 ---
 
-## 🔌 Hardware & Wiring
+## 🔌 Wiring
 
-### ESP32 Transmitter
+### ESP32 Transmitter Pin Map
 
 | Component | GPIO | Notes |
-|-----------|------|-------|
+|-----------|:----:|-------|
 | Left Joystick X | 35 | ADC1 input-only |
 | Left Joystick Y | 32 | ADC1 |
 | Right Joystick X | 33 | ADC1 |
 | Right Joystick Y | 34 | ADC1 input-only |
-| LABt (L stick click) | 26 | INPUT_PULLUP, active LOW |
-| RABt (R stick click) | 27 | INPUT_PULLUP, active LOW |
-| LBt (left shoulder) | 25 | INPUT_PULLUP, active LOW |
-| RBt (right shoulder) | 13 | INPUT_PULLUP, active LOW |
+| L Stick Click (LABt) | 26 | INPUT_PULLUP · active LOW |
+| R Stick Click (RABt) | 27 | INPUT_PULLUP · active LOW |
+| Left Shoulder (LBt) | 25 | INPUT_PULLUP · active LOW |
+| Right Shoulder (RBt) | 13 | INPUT_PULLUP · active LOW |
 | Toggle Switch 1 | 18 | INPUT_PULLUP |
 | Toggle Switch 2 | 19 | INPUT_PULLUP |
 | Pot 1 | 39 | ADC1 input-only |
 | Pot 2 | 36 | ADC1 input-only |
-| ADS1115 SDA/SCL | 21/22 | I²C battery monitor |
+| ADS1115 SDA / SCL | 21 / 22 | I²C battery monitor |
 | Red LED | 2 | 100Ω → GND |
 | Green LED | 4 | 100Ω → GND |
 | Passive Buzzer | 23 | 100Ω → GND |
-| UART TX2 to Nano | 17 | → Nano RX0 |
-| UART RX2 from Nano | 16 | ← Nano TX1 (optional) |
+| UART TX2 → Nano RX | 17 | Serial2 |
+| UART RX2 ← Nano TX | 16 | Optional |
 
-> ⚠️ Use **ADC1 pins only** (32–39). ADC2 conflicts with WiFi/ESP-NOW.
+> ⚠️ **ADC1 only (GPIO 32–39).** ADC2 shares silicon with the WiFi radio — using it causes jitter and crashes during ESP-NOW transmit.
 
-### Arduino Nano — KS0108 Display
+### Arduino Nano ↔ KS0108 (JHD12864E)
 
 | LCD Pin | Nano Pin | Notes |
-|---------|---------|-------|
-| D0–D7 | 2–9 | 8-bit parallel data bus |
-| EN | A4 (18) | Enable |
-| RS/DC | A5 (19) | Register select |
-| CS1 | 10 | Left half (pixels 0–63) |
-| CS2 | 11 | Right half (pixels 64–127) |
-| R/W | **GND** | Write-only — tie to GND |
-| RST | — | Not connected (U8X8_PIN_NONE) |
-| VCC | 5V | — |
+|---------|:--------:|-------|
+| D0 – D7 | 2 – 9 | 8-bit parallel data bus |
+| EN | A4 (18) | Enable strobe |
+| RS / DC | A5 (19) | Register select |
+| CS1 | 10 | Left half — pixels 0–63 |
+| CS2 | 11 | Right half — pixels 64–127 |
+| **R/W** | **GND** | ⚠️ Tie directly to GND — write-only |
+| RST | — | Not connected (`U8X8_PIN_NONE`) |
+| VCC / GND | 5V / GND | — |
 
-> ⚠️ **Disconnect Nano RX (pin 0) before uploading sketches** — UART from ESP32 conflicts with the programmer.
+> ⚠️ **Disconnect Nano pin 0 (RX) before uploading.** The UART from ESP32 conflicts with the USB programmer.
+
+### Wiring Diagram
+
+<div align="center">
+
+<!-- 🖼️ Add your Fritzing / hand-drawn / KiCad wiring diagram here -->
+
+| ESP32 TX Wiring | Nano ↔ LCD Wiring |
+|:---------------:|:-----------------:|
+| <img src="./assets/wiring_esp32.png" width="320" alt="ESP32 Wiring Diagram"/> | <img src="./assets/wiring_nano_lcd.png" width="320" alt="Nano LCD Wiring"/> |
+
+<!-- 🖼️ Full schematic (optional) -->
+<!-- <img src="./assets/schematic_v2.png" width="700" alt="Full Schematic"/> -->
+
+</div>
 
 ---
 
-## 📟 UART Packet Protocol (18 bytes)
+## 📟 UART Packet — 18 Bytes
 
 ```
-Byte  0   : 0xAA       ← Start marker
-Byte  1   : screenID   ← 0x01=BOOT  0x02=CAUTION  0x03=LOWBAT  0x04=NORMAL
-Byte  2   : cautionFlags (bitmask)
-              bit0=SW1_OK  bit1=SW2_OK  bit2=P1_OK  bit3=P2_OK  bit4=BAT_OK
-Byte  3   : Lx + 99    ← Left  stick X  (0..198, offset to avoid signed bytes)
-Byte  4   : Ly + 99    ← Left  stick Y
-Byte  5   : Rx + 99    ← Right stick X
-Byte  6   : Ry + 99    ← Right stick Y
-Byte  7   : Pot1       ← 0..100
-Byte  8   : Pot2       ← 0..100
-Byte  9   : BAT %      ← 0..100
-Byte 10   : Button bitmask
-              bit0=LABt  bit1=RABt  bit2=LBt  bit3=RBt
-              bit4=TSW1  bit5=TSW2  bit6=gConnected
-Bytes 11–16 : Reserved (0x00)
-Byte 17   : XOR checksum of bytes [1]..[16]
+[0]  0xAA          — Start marker (never checksummed)
+[1]  screenID      — 0x01=BOOT  0x02=CAUTION  0x03=LOWBAT  0x04=NORMAL
+[2]  cautionFlags  — bit0=SW1_OK  bit1=SW2_OK  bit2=P1_OK  bit3=P2_OK  bit4=BAT_OK
+[3]  Lx + 99       — Left  stick X  (0–198, signed offset)
+[4]  Ly + 99       — Left  stick Y
+[5]  Rx + 99       — Right stick X
+[6]  Ry + 99       — Right stick Y
+[7]  Pot1           — 0–100
+[8]  Pot2           — 0–100
+[9]  BAT %          — 0–100
+[10] Button mask    — bit0=LABt  bit1=RABt  bit2=LBt  bit3=RBt
+                      bit4=TSW1  bit5=TSW2  bit6=gConnected
+[11–16] Reserved   — 0x00
+[17] XOR checksum  — XOR of bytes [1]..[16]
 ```
 
-Nano validates checksum before rendering. Bad packets are silently dropped — last good state holds on screen.
+Nano validates checksum before rendering. Bad/partial packets are silently dropped — last good frame holds on screen.
 
 ---
 
 ## 🖥️ Display Screens
 
-### `SCREEN_BOOT` — Capacitor Settle Animation
-Shown during `BOOT_SETTLE_MS` (default 4000 ms) while the ADS1115 voltage stabilises.  
-A filled 8×8 box bounces left↔right across the bottom of the display.
+<div align="center">
 
-### `SCREEN_CAUTION` — Startup Safety Gate
-Blocks until **all** conditions are met simultaneously:
+<!-- 🖼️ Screenshot each screen from the LCD_Visualizer.html and drop them here -->
 
-| Check | Condition | Why |
-|-------|-----------|-----|
-| SW1 | Must be OFF (HIGH) | Prevent robot lurching on power-up |
-| SW2 | Must be OFF (HIGH) | — |
-| Pot1 | Must be at minimum | Avoid jump-to-position on startup |
-| Pot2 | Must be at minimum | — |
-| Battery | ≥ 10 % | Don't operate on a dying pack |
+| Screen | Preview | Description |
+|--------|:-------:|-------------|
+| 🟡 **BOOT** | <img src="./assets/screen_boot.png" width="200" alt="Boot Screen"/> | Bouncing box animation while ADS1115 voltage settles (4 s default) |
+| 🔴 **CAUTION** | <img src="./assets/screen_caution.png" width="200" alt="Caution Screen"/> | Live per-check gate: SW1 / SW2 / P1 / P2 / BAT must all show OK |
+| 🔋 **LOWBAT** | <img src="./assets/screen_lowbat.png" width="200" alt="Low Battery Screen"/> | Radio killed · outputs zeroed · large battery icon blinks |
+| 🟢 **NORMAL** | <img src="./assets/screen_normal.png" width="200" alt="Normal HUD"/> | Full live HUD: joysticks · pots · signal bars · buttons · battery |
 
-Live status shown per-check as `OK` / `HIGH!` / `LOW!`.
+</div>
 
-### `SCREEN_LOWBAT` — Safe Mode
-Triggered when `batV ≤ BAT_LOW_V` (default 6.8 V).  
-ESP-NOW radio killed · all outputs zeroed · large battery icon blinks.  
-Recovery re-runs the full startup gate.
-
-### `SCREEN_NORMAL` — HUD
+### Normal HUD Layout (128×64)
 
 ```
-┌────────────────────────────────────────────────────────────────┐
-│ [L-Joy]  [P1▐]  ≡≡≡≡  [Signal bars]  ≡≡≡≡  [P2▐]  [R-Joy]   │  y 0–28
-├────────────────────────────────────────────────────────────────┤  y 29
-│  [LB] [LS] [S1]              [S2] [RS] [RB]                   │  y 30–44
-├────────────────────────────────────────────────────────────────┤  y 45
-│ ┌──────────────┐                    🔋▌▌▌▌ 87%               │  y 46–63
-│ │ HASHTAG      │                                              │
-│ │ URC V2.0     │                                              │
-│ └──────────────┘                                              │
-└────────────────────────────────────────────────────────────────┘
+y  0–28 │ [L-Joy]  [P1▐]  ·····  [▮▮▮▮ Signal]  ·····  [P2▐]  [R-Joy] │
+y    29 ├──────────────────────────── divider ───────────────────────────┤
+y 30–44 │   [LB]  [LS]  [S1]                 [S2]  [RS]  [RB]           │
+y    45 ├──────────────────────────── divider ───────────────────────────┤
+y 46–63 │ ┌─ HASHTAG ─┐                          [🔋▌▌▌▌]  82%         │
+        │ │  URC V2.0  │                                                  │
+        │ └────────────┘                                                  │
 ```
 
-- Joystick dots track live position inside crosshair box
-- 4-bar animated signal widget (fills on connect, blinks ✕ on loss)
-- Vertical slider bars for both pots
-- 6 button widgets invert on press (white text on black)
-- Battery icon fills/blinks from right (positive terminal right)
+---
+
+## 🎮 Live LCD Visualizer
+
+An interactive browser-based preview that renders the **exact same pixel layout** as the real KS0108 firmware — useful for testing layout changes before flashing.
+
+<div align="center">
+
+<!-- 🖼️ Screenshot of the HTML visualizer running in your browser -->
+<img src="./assets/visualizer_screenshot.png" width="500" alt="LCD Visualizer Screenshot"/>
+
+</div>
+
+> 📄 **Open [`LCD_Visualizer.html`](./LCD_Visualizer.html)** in any browser.  
+> Drag the sliders and tick the checkboxes to see joysticks, pots, signal bars, buttons, and battery update live — no hardware needed.
+
+**What it simulates:**
+- Live joystick dot position tracking inside crosshair box
+- 4-bar animated signal widget (fill cycle when connected, blinking ✕ when not)
+- Vertical pot sliders
+- Button invert-on-press (white text on black)
+- Battery fill + low-battery blink at < 20 %
+- All at 2× pixel zoom with authentic green-on-black LCD palette
 
 ---
 
 ## 🔊 Sound Engine
 
-All sounds use rapid `tone()` frequency sweeps — no blocking `delay()` between steps. Inspired by Radiomaster TX16S audio profiles.
+Sweep-based audio using rapid `tone()` steps — simulates Radiomaster TX16S-style sounds on a passive buzzer.
 
-| Event | Sound | Description |
-|-------|-------|-------------|
+| Event | Profile | Feel |
+|-------|---------|------|
 | Boot complete | `toneBoot()` | 3-stage rising sweep → sustain pip |
-| Link acquired | `toneConnected()` | Fast whooooop → two confident bips |
+| Link acquired | `toneConnected()` | Fast whoop → two confident bips |
 | Link lost | `toneDisconnected()` | Alert pip → falling wail → low thuds |
-| Low battery | `toneLowBat()` | Three descending stabs |
-| Joystick click | `soundJoyClick()` | Micro rising sweep (light "tik") |
-| Shoulder button | `soundShoulderBtn()` | Low thunk + rising pip |
-| Toggle ON | `soundToggleOn()` | Ascending blip |
-| Toggle OFF | `soundToggleOff()` | Descending blip |
+| Low battery | `toneLowBat()` | Three urgent descending stabs |
+| Joystick click | `soundJoyClick()` | Micro rising sweep — light "tik" |
+| Shoulder button | `soundShoulderBtn()` | Low thunk + rising confirm pip |
+| Toggle ON / OFF | `soundToggleOn/Off()` | Ascending / descending blip |
 | Pot movement | `soundPotTick()` | Chirp pitched to pot position |
 
-`softStop()` is used at the end of sounds that end at low frequencies — prevents the audible "pop" from abrupt square-wave cutoff at low Hz.
+`softStop()` tails off to ~80 Hz before `noTone()` to avoid the audible click from abrupt square-wave cutoff.
 
 ---
 
 ## 🔋 Battery System
 
-- **Sensor:** ADS1115 at GAIN_TWOTHIRDS (±6.144 V, 0.1875 mV/LSB)
-- **Divider:** 100 kΩ + 47 kΩ → ratio `147/47 = 3.128`
-- **Pack:** 2S Li-Ion, 6.6 V (0 %) → 8.4 V (100 %)
-- **Safe mode threshold:** 6.8 V
-- **Startup block threshold:** 10 %
-- **Calibration:** `BAT_CAL_FACTOR` trim constant for divider error
+| Parameter | Value |
+|-----------|-------|
+| Sensor | ADS1115 · GAIN_TWOTHIRDS · ±6.144 V · 0.1875 mV/LSB |
+| Voltage divider | 100 kΩ + 47 kΩ → ratio 3.128× |
+| Pack type | 2S Li-Ion |
+| Full / Empty | 8.4 V (100 %) / 6.6 V (0 %) |
+| Safe mode trigger | ≤ 6.8 V → radio killed · outputs zeroed |
+| Startup block | < 10 % → CAUTION gate holds |
+| Calibration | `BAT_CAL_FACTOR` trim multiplier |
 
 ---
 
-## ⚙️ Tunable Constants (top of ESP32 firmware)
+## ⚙️ Tunable Constants
 
 ```cpp
-#define LCD_FPS         60    // Loop rate in Hz (also sets UART packet rate)
+// ── In ESP32_TX_v2.0.ino ─────────────────────────────────────
+#define LCD_FPS         60    // Loop + UART packet rate (Hz)
 #define BOOT_SETTLE_MS  4000  // Boot animation duration (ms)
-#define DEADZONE        15    // Joystick centre dead-band (mapped units)
-#define CHANGE_THRESH   2     // Min axis delta to update txData (kills jitter)
-#define POT_ZERO_THRESH 80    // Raw ADC ≤ this = "pot at minimum" for gate
-#define ACK_TIMEOUT     500   // ms without ACK → mark disconnected
-#define BAT_LOW_V       6.8f  // V → triggers safe mode
-#define BROADCAST       1     // 1=broadcast  0=unicast to ROBOT_MAC_BYTES
+#define DEADZONE        15    // Joystick centre dead-band
+#define CHANGE_THRESH   2     // Min axis delta before updating txData
+#define POT_ZERO_THRESH 80    // Raw ADC ≤ this → pot at minimum
+#define ACK_TIMEOUT     500   // ms without ACK → disconnected
+#define BAT_LOW_V       6.8f  // V → safe mode threshold
+#define BROADCAST       1     // 1 = FF:FF:… broadcast  |  0 = unicast
 ```
-
----
-
-## 📡 ESP-NOW Link Details
-
-- **Mode:** Broadcast by default (`BROADCAST 1`) — any receiver hears packets
-- **Switch to unicast:** Set `BROADCAST 0` and paste target MAC in `ROBOT_MAC_BYTES`
-- **Connection detection:** Receiver sends `AckData{alive=true}` back; TX watchdog checks within `ACK_TIMEOUT` ms
-- **Core compatibility:** Callback uses `esp_now_recv_info_t*` (Core 3.x); Core 2.x note included in comments
-
----
-
-## 📚 Dependencies
-
-| Library | Used In | Install Via |
-|---------|---------|-------------|
-| Adafruit ADS1X15 | ESP32 TX | Library Manager |
-| U8g2 (olikraus) | Arduino Nano | Library Manager |
-| ESP-NOW | ESP32 TX + RX | Built-in (ESP32 core) |
 
 ---
 
 ## 🚀 Getting Started
 
-1. **Transmitter** — Flash `ESP32_TX_v2.0.ino` to your ESP32. Open Serial monitor at 115200 to see boot MAC address.
-2. **Display** — Flash `Nano_Display_v2.0.ino` to your Arduino Nano. **Disconnect pin 0 first.**
-3. **Receiver** — Copy `ReceiverModule.h` into your robot sketch folder. Call `receiver.begin()` in setup.
-4. **Wiring** — ESP32 GPIO17 → Nano RX0 · share GND · tie LCD R/W to GND.
-5. **Power on** — Observe SCREEN_BOOT (4 s) → SCREEN_CAUTION (put switches OFF, pots to minimum) → SCREEN_NORMAL.
+**1. Flash Transmitter**  
+Open `ESP32_TX_v2.0.ino`, flash to ESP32. Serial monitor at 115200 shows the TX MAC address at boot.
+
+**2. Flash Display Nano**  
+⚠️ Disconnect Nano pin 0 (RX) first. Flash `Nano_Display_v2.0.ino`. Reconnect pin 0 after.
+
+**3. Wire UART Link**  
+`ESP32 GPIO17` → `Nano RX0` · `GND` shared · LCD `R/W` → `GND`.
+
+**4. Set Up Receiver**  
+Copy `ReceiverModule.h` into your robot sketch folder. Paste TX MAC from step 1 into `receiver.begin("XX:XX:XX:XX:XX:XX")`.
+
+**5. Power On & Check Sequence**  
+`SCREEN_BOOT` (4 s) → `SCREEN_CAUTION` (set SW1/SW2 OFF, pots to minimum) → `SCREEN_NORMAL` + boot tone.
+
+---
+
+## 📚 Dependencies
+
+| Side | Library | Install |
+|------|---------|---------|
+| ESP32 TX | Adafruit ADS1X15 | Library Manager |
+| Arduino Nano | U8g2 by olikraus | Library Manager |
+| ESP32 RX | None | Just copy `ReceiverModule.h` |
 
 ---
 
 <div align="center">
 
-## 👤 Author
+**[📖 Back to Main README](../README.md)** · **[📧 Email](mailto:micro.aniket@gmail.com)** · **[💼 LinkedIn](https://linkedin.com/in/itzz-hashtag)** · **[🐙 GitHub](https://github.com/itzzhashtag)** · **[📸 Instagram](https://instagram.com/itzz_hashtag)**
 
-**Aniket Chowdhury (aka `#Hashtag`)**
+<br/>
 
-[![Email](https://img.shields.io/badge/Email-micro.aniket@gmail.com-red?style=flat-square&logo=gmail)](mailto:micro.aniket@gmail.com)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-itzz--hashtag-blue?style=flat-square&logo=linkedin)](https://linkedin.com/in/itzz-hashtag)
-[![GitHub](https://img.shields.io/badge/GitHub-itzzhashtag-black?style=flat-square&logo=github)](https://github.com/itzzhashtag)
-[![Instagram](https://img.shields.io/badge/Instagram-itzz__hashtag-purple?style=flat-square&logo=instagram)](https://instagram.com/itzz_hashtag)
-
-[← Back to main README](../README.md)
-
-⭐ If URC saved you time, leave a star!
+⭐ Star this repo if URC saved you time!
 
 </div>
