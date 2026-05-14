@@ -4,7 +4,7 @@
 //  Role    : Receiver / Robot Side
 //  Author  : Aniket Chowdhury
 //  Protocol: ESP-NOW Wireless Communication
-//  TX MAC  : D4:E9:F4:A4:C9:7C
+//  TX MAC  :  
 // ----------------------------------------------------------------------------
 //  DESCRIPTION
 // ----------------------------------------------------------------------------
