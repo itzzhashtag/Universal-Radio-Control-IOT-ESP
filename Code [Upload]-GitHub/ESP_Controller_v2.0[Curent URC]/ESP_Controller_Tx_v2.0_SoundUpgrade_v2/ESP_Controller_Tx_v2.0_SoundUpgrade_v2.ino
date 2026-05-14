@@ -1,6 +1,6 @@
 // ================================================================
 //  ESP32 Universal RC Controller — TX v2.0
-//  MAC : D4:E9:F4:A4:C9:7C
+//  MAC 1 : 
 //  Role    : Transmitter / Master
 //  Board   : ESP32 (38-pin devkit)
 //  Protocol: ESP-NOW (broadcast by default) + UART to Nano display
@@ -94,7 +94,7 @@
 //  ★  BROADCAST / UNICAST TARGET  ★
 // ================================================================
 #define BROADCAST 1  // 1 = broadcast FF:FF:…  |  0 = unicast to ROBOT_MAC_BYTES
-#define ROBOT_MAC_BYTES 0x20, 0xE7, 0xC8, 0x9F, 0x47, 0xF8
+#define ROBOT_MAC_BYTES 0x20, 0xE7, 0xC8, 0x9F, 0x47, 0xF8 // example Mac
 
 #if BROADCAST
 uint8_t peerMAC[] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
