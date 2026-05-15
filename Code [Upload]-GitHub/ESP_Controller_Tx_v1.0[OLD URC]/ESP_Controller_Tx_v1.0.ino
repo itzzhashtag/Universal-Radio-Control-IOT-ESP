@@ -1,5 +1,5 @@
 // ================================================================
-// ESP-NOW RC Controller  v0.5
+// ESP-NOW RC Controller  v1.0
 // Role  : Master / Transmitter
 // Board : ESP32 (38-pin devkit)
 // Hardware:
