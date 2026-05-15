@@ -31,10 +31,23 @@ Hand-wired hardware · ESP-NOW radio link · Modular receiver library · Multi-p
 
 <!-- 🖼️ Replace the src paths with your actual photos. Recommended: front, internals, in-use -->
 
-| Front View | Inside / Wiring | In Action |
-|:----------:|:---------------:|:---------:|
-| <img src="./assets/controller_front.jpg" width="250" alt="Controller Front"/> | <img src="./assets/controller_wiring.jpg" width="250" alt="Wiring"/> | <img src="./assets/controller_action.jpg" width="250" alt="In Action"/> |
+| Front View of V1.0 | Front View of V2.0 | In Action | Caution Mode |
+|:----------:|:---------:|:---------:|:---------:|
+| <img src="https://github.com/user-attachments/assets/0d5c9cc6-242d-417b-882d-dd49d86de769" width="250" alt="Front View of V1.0"/> | <img src="https://github.com/user-attachments/assets/790e8f8d-c663-4fce-bc0d-e49fa5c03b9e" width="250" alt="Front View of V2.0"/> | <img src="https://github.com/user-attachments/assets/b348c5ab-b535-49fc-99af-768a9f4a50ab" width="250" alt="In Action"/> | <img src="https://github.com/user-attachments/assets/6eb9c748-f37b-481a-adf7-f7afdfce545c" width="250" alt="Caution Mode"/> |
 
+</div>
+
+---
+
+## 📸 Wiring Schematics
+
+<div align="center">
+
+<!-- 🖼️ Replace the src paths with your actual photos. Recommended: front, internals, in-use -->
+
+| Breadboard | Schematics |
+|:----------:|:---------------:|
+| <img src="https://github.com/user-attachments/assets/003fb99e-7e1f-437a-b3b6-bc4aece9a538" width="500" height="500" alt="Breadboard"/> | <img src="https://github.com/user-attachments/assets/4b284221-0378-461c-9655-05f1df40999f" width="500" height="500" alt="Schematics"/>
 </div>
 
 ---
@@ -66,11 +79,8 @@ Hand-wired hardware · ESP-NOW radio link · Modular receiver library · Multi-p
 
 <div align="center">
 
-<!-- 🖼️ Add LCD photos or screenshots from the HTML simulator here -->
-
 | 🟡 Boot | 🔴 Caution Gate | 🔋 Low Battery | 🟢 Normal HUD |
 |:-------:|:---------------:|:--------------:|:-------------:|
-| <img src="./assets/screen_boot.jpg" width="175" alt="Boot Screen"/> | <img src="./assets/screen_caution.jpg" width="175" alt="Caution Screen"/> | <img src="./assets/screen_lowbat.jpg" width="175" alt="Low Battery"/> | <img src="./assets/screen_normal.jpg" width="175" alt="Normal HUD"/> |
 | Bouncing box while caps settle | Live SW/POT/BAT gate status | Radio killed · outputs zeroed | Full controller HUD |
 
 </div>
@@ -119,14 +129,12 @@ void loop() {
 
 <div align="center">
 
-<!-- 🖼️ Add a photo for each project. Drop images in ./assets/ and update src paths -->
-
-| Project | Photo | Notes |
-|---------|:-----:|-------|
-| **ESP32 Hexapod** | <img src="./assets/proj_hexapod.jpg" width="160" alt="Hexapod"/> | 2× PCA9685 · 18× MG servo · tripod gait · IK |
-| **Otto Biped (SiBot)** | <img src="./assets/proj_sibot.jpg" width="160" alt="SiBot"/> | Safe angle limits · 2S LiPo · buck regulated |
-| **1D LED Racing** | <img src="./assets/proj_ledrace.jpg" width="160" alt="LED Race"/> | 4-player · ESP-NOW buttons · NeoPixel strip |
-| **1D LED Pong** | <img src="./assets/proj_pong.jpg" width="160" alt="LED Pong"/> | Physics engine · TM1637 score display · forfeit system |
+| Project | Notes |
+|---------|-------|
+| **ESP32 Hexapod** | 2× PCA9685 · 18× MG servo · tripod gait · IK |
+| **Otto Biped (SiBot)** | Safe angle limits · 2S LiPo · buck regulated |
+| **1D LED Racing** | 4-player · ESP-NOW buttons · NeoPixel strip |
+| **1D LED Pong** | Physics engine · TM1637 score display · forfeit system |
 
 </div>
 
