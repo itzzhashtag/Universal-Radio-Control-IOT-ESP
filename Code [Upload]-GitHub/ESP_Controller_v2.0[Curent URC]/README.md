@@ -31,15 +31,13 @@
 
 ---
 
-## 📸 Build Photos
+## 📸 Version Builds
 
-<div align="center">
+<!-- 🖼️ Replace the src paths with your actual photos. Recommended: front, internals, in-use -->
 
-<!-- 🖼️ Replace src with your actual build photos -->
-
-| Controller (Front) | Controller (Back) | Internals |
-|:-----------------:|:-----------------:|:---------:|
-| <img src="./assets/v2_front.jpg" width="220" alt="Front"/> | <img src="./assets/v2_back.jpg" width="220" alt="Back"/> | <img src="./assets/v2_inside.jpg" width="220" alt="Inside"/> |
+| Build V1.0 | V1.0 In Action | Build V2.0 | V2.0 In Action |
+|:---------:|:---------:|:---------:|:---------:|
+| <img src="https://github.com/user-attachments/assets/199f8071-261f-4a0f-b1ee-63039b627be9" width="250" alt="Build V1.0"/> | <img src="https://github.com/user-attachments/assets/0d5c9cc6-242d-417b-882d-dd49d86de769" width="250" alt="V1.0 In Action"/> | <img src="https://github.com/user-attachments/assets/6eb9c748-f37b-481a-adf7-f7afdfce545c" width="250" alt="Build V2.0"/> | <img src="https://github.com/user-attachments/assets/b348c5ab-b535-49fc-99af-768a9f4a50ab" width="250" alt="V2.0 In Action"/> |
 
 </div>
 
@@ -131,19 +129,17 @@
 
 > ⚠️ **Disconnect Nano pin 0 (RX) before uploading.** The UART from ESP32 conflicts with the USB programmer.
 
-### Wiring Diagram
+---
+
+## 📸 Wiring Diagram
 
 <div align="center">
 
-<!-- 🖼️ Add your Fritzing / hand-drawn / KiCad wiring diagram here -->
+<!-- 🖼️ Replace the src paths with your actual photos. Recommended: front, internals, in-use -->
 
-| ESP32 TX Wiring | Nano ↔ LCD Wiring |
-|:---------------:|:-----------------:|
-| <img src="./assets/wiring_esp32.png" width="320" alt="ESP32 Wiring Diagram"/> | <img src="./assets/wiring_nano_lcd.png" width="320" alt="Nano LCD Wiring"/> |
-
-<!-- 🖼️ Full schematic (optional) -->
-<!-- <img src="./assets/schematic_v2.png" width="700" alt="Full Schematic"/> -->
-
+| Breadboard | Schematics |
+|:----------:|:---------------:|
+| <img src="https://github.com/user-attachments/assets/003fb99e-7e1f-437a-b3b6-bc4aece9a538" width="500" height="500" alt="Breadboard"/> | <img src="https://github.com/user-attachments/assets/4b284221-0378-461c-9655-05f1df40999f" width="500" height="500" alt="Schematics"/>
 </div>
 
 ---
@@ -179,10 +175,11 @@ Nano validates checksum before rendering. Bad/partial packets are silently dropp
 
 | Screen | Preview | Description |
 |--------|:-------:|-------------|
-| 🟡 **BOOT** | <img src="./assets/screen_boot.png" width="200" alt="Boot Screen"/> | Bouncing box animation while ADS1115 voltage settles (4 s default) |
-| 🔴 **CAUTION** | <img src="./assets/screen_caution.png" width="200" alt="Caution Screen"/> | Live per-check gate: SW1 / SW2 / P1 / P2 / BAT must all show OK |
-| 🔋 **LOWBAT** | <img src="./assets/screen_lowbat.png" width="200" alt="Low Battery Screen"/> | Radio killed · outputs zeroed · large battery icon blinks |
-| 🟢 **NORMAL** | <img src="./assets/screen_normal.png" width="200" alt="Normal HUD"/> | Full live HUD: joysticks · pots · signal bars · buttons · battery |
+| 🟢 **Power On** | <img src="https://github.com/user-attachments/assets/1bc80ed8-7246-4b0f-adf6-9385fcc002ef" width="200" alt="Boot Screen"/> | Starts the Nano and ESP (2 s default) |
+| 🟡 **BOOT** | <img src="https://github.com/user-attachments/assets/8c0024b5-1d6e-4681-8693-487ddd7e982e" width="200" alt="Boot Screen"/> | Bouncing box animation while ADS1115 voltage settles (4 s default) |
+| 🔴 **CAUTION** | <img src="https://github.com/user-attachments/assets/6eb9c748-f37b-481a-adf7-f7afdfce545c" width="200" alt="Caution Screen"/> | Live per-check gate: SW1 / SW2 / P1 / P2 / BAT must all show OK |
+| 🔋 **LOWBAT** | <img src="https://github.com/user-attachments/assets/6eb9c748-f37b-481a-adf7-f7afdfce545c" width="200" alt="Low Battery Screen"/> | Radio killed · outputs zeroed · large battery icon blinks |
+| 🟢 **NORMAL** | <img src="https://github.com/user-attachments/assets/49fcbe72-b699-490e-aff4-af74c91b9ae8" width="200" alt="Normal HUD"/> | Full live HUD: joysticks · pots · signal bars · buttons · battery |
 
 </div>
 
@@ -207,11 +204,11 @@ An interactive browser-based preview that renders the **exact same pixel layout*
 <div align="center">
 
 <!-- 🖼️ Screenshot of the HTML visualizer running in your browser -->
-<img src="./assets/visualizer_screenshot.png" width="500" alt="LCD Visualizer Screenshot"/>
+<img src="https://github.com/user-attachments/assets/bb20c395-fbdf-4c0b-8d3e-2a2304d622b9" width="500" alt="LCD Visualizer Screenshot"/>
 
 </div>
 
-> 📄 **Open [`LCD_Visualizer.html`](./LCD_Visualizer.html)** in any browser.  
+> 📄 **Open [`ESP_Controller_Tx_v2.0_Visualization.html`](./ESP_Controller_Tx_v2.0_Visualization.html)** in any browser.  
 > Drag the sliders and tick the checkboxes to see joysticks, pots, signal bars, buttons, and battery update live — no hardware needed.
 
 **What it simulates:**
