@@ -1,24 +1,18 @@
 <div align="center">
 
+# 📡 URC v2.0 — Universal RC Controller
+
+**What's new:** Display offloaded to Arduino Nano · 4-screen KS0108 UI · 18-byte UART protocol · Radiomaster-style sweep audio
+
+**by [Aniket Chowdhury](https://github.com/itzzhashtag) (aka `#Hashtag`)**  
+
 <img src="https://img.shields.io/badge/URC-v2.0-blueviolet?style=for-the-badge&logo=espressif"/>
 <img src="https://img.shields.io/badge/ESP--NOW-Wireless-red?style=for-the-badge&logo=wifi"/>
 <img src="https://img.shields.io/badge/Display-KS0108%20128×64-cyan?style=for-the-badge"/>
 <img src="https://img.shields.io/badge/Audio-Radiomaster%20Style-orange?style=for-the-badge"/>
 <img src="https://img.shields.io/badge/Status-Stable-brightgreen?style=for-the-badge"/>
 
-<br/><br/>
 
-<!-- 🖼️ HERO — replace with a photo of the v2.0 controller or a wiring hero shot -->
-<img src="./assets/hero_v2.png" alt="URC v2.0 Hero" width="100%"/>
-
-<br/>
-
-# 📡 URC v2.0 — Universal RC Controller
-
-> **What's new:** Display offloaded to Arduino Nano · 4-screen KS0108 UI · 18-byte UART protocol · Radiomaster-style sweep audio
-
-**by [Aniket Chowdhury](https://github.com/itzzhashtag) (aka `#Hashtag`)**  
-[← Back to main README](../README.md)
 
 </div>
 
@@ -308,12 +302,34 @@ Copy `ReceiverModule.h` into your robot sketch folder. Paste TX MAC from step 1 
 
 ---
 
-<div align="center">
+## 👤 Author & Contact
 
-**[📖 Back to Main README](../README.md)** · **[📧 Email](mailto:micro.aniket@gmail.com)** · **[💼 LinkedIn](https://linkedin.com/in/itzz-hashtag)** · **[🐙 GitHub](https://github.com/itzzhashtag)** · **[📸 Instagram](https://instagram.com/itzz_hashtag)**
+👨 **Name:** Aniket Chowdhury (aka Hashtag)  
+📧 **Email:** [micro.aniket@gmail.com](mailto:micro.aniket@gmail.com)  
+💼 **LinkedIn:** [itzz-hashtag](https://www.linkedin.com/in/itzz-hashtag/)  
+🐙 **GitHub:** [itzzhashtag](https://github.com/itzzhashtag)  
+📸 **Instagram:** [@itzz_hashtag](https://instagram.com/itzz_hashtag)
 
-<br/>
+---
 
-⭐ Star this repo if URC saved you time!
+## 📜 License
 
-</div>
+This project is released under a Modified MIT License.
+It is intended for personal and non-commercial use only.
+
+🚫 Commercial use or distribution for profit is not permitted without prior written permission.
+🤝 For collaboration, reuse, or licensing inquiries, please contact the author.
+
+📄 View Full License <br>
+[![License: MIT–NC](https://img.shields.io/badge/license-MIT--NC-blue.svg)](./LICENSE)
+
+---
+
+## ❤️ Acknowledgements
+
+This is a solo passion project, built with countless nights of tinkering, testing, and debugging.  
+If you find it useful or inspiring, feel free to ⭐ the repository or connect with me on social media!
+
+---
+
+> _“If the mind can create, the hands can translate.”_ – Hashtag
