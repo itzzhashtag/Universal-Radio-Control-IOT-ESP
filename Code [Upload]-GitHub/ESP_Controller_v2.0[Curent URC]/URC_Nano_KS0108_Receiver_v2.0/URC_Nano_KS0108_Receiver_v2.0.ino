@@ -523,13 +523,12 @@ void drawCaution() {
 //  Radio is off on the ESP32 side; robot has been zeroed.
 //  Large horizontal battery bar blinks to draw attention.
 // ================================================================
-void drawLowBat() {
+void drawLowBat() 
+{
   u8g2.setFont(u8g2_font_6x10_tf);
-  u8g2.drawStr(14, 14, "LOW BATTERY!");
-
+  u8g2.drawStr(28, 14, "LOW BATTERY!");
   u8g2.setFont(u8g2_font_4x6_tf);
-  u8g2.drawStr(24, 26, "Radio  OFF");
-
+  u8g2.drawStr(40, 26, "Radio OFF");
   // Large horizontal battery body (96×20 pixels)
   fr(10, 32, 96, 20);
   fb(106, 38, 5, 8);  // positive nub on right side
