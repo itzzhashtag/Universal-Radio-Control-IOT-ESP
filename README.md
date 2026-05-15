@@ -1,12 +1,5 @@
 <div align="center">
 
-# 📡 Universal RC Controller — URC
-
-**A fully custom wireless RC system built from scratch.**  
-Hand-wired hardware · ESP-NOW radio link · Modular receiver library · Multi-project compatible
-
-**by [Aniket Chowdhury](https://github.com/itzzhashtag) (aka `#Hashtag`)**
-
 <img src="https://img.shields.io/badge/ESP32-ESP--NOW-red?style=for-the-badge&logo=espressif&logoColor=white"/>
 <img src="https://img.shields.io/badge/Status-Active%20Development-brightgreen?style=for-the-badge"/>
 <img src="https://img.shields.io/badge/Protocol-ESP--NOW-blue?style=for-the-badge"/>
@@ -14,6 +7,18 @@ Hand-wired hardware · ESP-NOW radio link · Modular receiver library · Multi-p
 <img src="https://img.shields.io/badge/Current-v2.0-blueviolet?style=for-the-badge"/>
 
 <br/><br/>
+
+<!-- 🖼️ HERO IMAGE — replace src with your controller photo or a banner image -->
+<img src="./assets/hero_banner.png" alt="URC Hero Banner" width="100%"/>
+
+<br/><br/>
+
+# 📡 Universal RC Controller — URC
+
+**A fully custom wireless RC system built from scratch.**  
+Hand-wired hardware · ESP-NOW radio link · Modular receiver library · Multi-project compatible
+
+**by [Aniket Chowdhury](https://github.com/itzzhashtag) (aka `#Hashtag`)**
 
 </div>
 
@@ -175,28 +180,10 @@ URC/
 
 ---
 
-## 👤 Author & Contact
-
-👨 **Name:** Aniket Chowdhury (aka Hashtag)  
-📧 **Email:** [micro.aniket@gmail.com](mailto:micro.aniket@gmail.com)  
-💼 **LinkedIn:** [itzz-hashtag](https://www.linkedin.com/in/itzz-hashtag/)  
-🐙 **GitHub:** [itzzhashtag](https://github.com/itzzhashtag)  
-📸 **Instagram:** [@itzz_hashtag](https://instagram.com/itzz_hashtag)
-
----
-
-# ⭐ SUPPORT
-
-If you like this project:
-⭐ Star the repo  
-🍴 Fork it  
-🔧 Modify it  
-🚀 Build your own version  
-
----
-
 <div align="center">
-  
+
+**[📖 v2.0 Full Docs](./v2.0/README.md)** · **[📧 Email](mailto:micro.aniket@gmail.com)** · **[💼 LinkedIn](https://linkedin.com/in/itzz-hashtag)** · **[🐙 GitHub](https://github.com/itzzhashtag)** · **[📸 Instagram](https://instagram.com/itzz_hashtag)**
+
 <br/>
 
 ⭐ Star this repo if URC saved you from building your own from scratch!
